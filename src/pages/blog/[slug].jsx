@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styles from "../../styles/post.module.css";
+import posts from "../../db/posts.json";
 
 export default function Post(props) {
   const router = useRouter();
   return (
     <>
+      <h3>Hello</h3>
       <p>
         <Link href="/blog">
           <small>&laquo; back to all blog posts</small>
@@ -21,13 +23,8 @@ export default function Post(props) {
 }
 
 export async function getStaticPaths() {
-  const response = await fetch(
-    "https://learnwebcode.github.io/json-example/posts.json"
-  );
-  const data = await response.json();
-
-  const thePaths = data.posts.map((pet) => {
-    return { params: { slug: pet.slug } };
+  const thePaths = posts.map((post) => {
+    return { params: { slug: post.slug } };
   });
 
   return {
@@ -37,13 +34,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const response = await fetch(
-    "https://learnwebcode.github.io/json-example/posts.json"
-  );
-  const data = await response.json();
-  const thePost = data.posts.filter(
-    (post) => post.slug === context.params.slug
-  )[0];
+  const thePost = posts.filter((post) => post.slug === context.params.slug)[0];
 
   return {
     props: {
